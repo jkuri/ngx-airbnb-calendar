@@ -1,0 +1,57 @@
+$white: #ffffff
+$black: #000000
+$calendar-background: $white
+$calendar-width: 850px
+$calendar-height: 410px
+$border-radius: 10px
+$box-shadow: 0 6px 20px rgba($black, .2)
+
+.airbnb-calendar-container
+  display: block
+  position: absolute
+  top: 0
+  left: 50%
+  transform: translateX(-50%)
+  height: $calendar-height
+  width: $calendar-width
+
+  .airbnb-calendar
+    display: block
+    width: 100%
+    height: 100%
+    border-radius: $border-radius
+    box-shadow: $box-shadow
+
+    .calendar
+      width: calc(100% / 2)
+      height: 100%
+      float: left
+      padding: 40px 60px
+
+      .controls
+        display: flex
+        width: 100%
+        margin-bottom: 15px
+        align-items: center
+        justify-content: center
+        position: relative
+
+        .month-name
+          font-size: 15px
+          font-weight: 600
+
+        .chevron-left, .chevron-right
+          position: absolute
+          top: 0
+          width: 8px
+          height: 14px
+          cursor: pointer
+
+        .chevron-left
+          left: 0
+
+        .chevron-right
+          right: 0
+
+
+

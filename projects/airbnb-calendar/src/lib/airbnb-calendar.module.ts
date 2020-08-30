@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { AirbnbCalendarComponent } from './airbnb-calendar.component';
 
-
-
 @NgModule({
   declarations: [AirbnbCalendarComponent],
-  imports: [
-  ],
+  imports: [],
   exports: [AirbnbCalendarComponent]
 })
-export class AirbnbCalendarModule { }
+export class AirbnbCalendarModule {}
