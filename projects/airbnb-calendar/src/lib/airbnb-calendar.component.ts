@@ -9,7 +9,7 @@ import {
   EventEmitter
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { Calendar, Day, CalendarOptions, mergeCalendarOptions } from './airbnb-calendar.interface';
+import { Calendar, CalendarOptions, mergeCalendarOptions } from './airbnb-calendar.interface';
 import {
   startOfMonth,
   endOfMonth,
@@ -18,13 +18,12 @@ import {
   getMonth,
   getYear,
   isToday,
-  isSameDay,
   isSameMonth,
-  isBefore,
-  isAfter,
   format,
   addMonths,
-  setDay
+  setDay,
+  getDay,
+  subDays
 } from 'date-fns';
 
 @Component({
@@ -94,6 +93,23 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
         isSelected: false
       };
     });
+    const firstDay = this.options.firstCalendarDay || 0;
+    const tmp = getDay(start) - firstDay;
+    const prevDays = tmp < 0 ? 7 - firstDay : tmp;
+    for (let i = 1; i <= prevDays; i++) {
+      const currentDate = subDays(start, i);
+      const d = {
+        date: currentDate,
+        day: getDate(currentDate),
+        month: getMonth(currentDate),
+        year: getYear(currentDate),
+        isSameMonth: false,
+        isToday: false,
+        isSelectable: false,
+        isSelected: false
+      };
+      days.unshift(d);
+    }
 
     let dayNames = [];
     const dayStart = this.options.firstCalendarDay || 0;

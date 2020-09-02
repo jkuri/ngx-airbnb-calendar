@@ -1,3 +1,10 @@
+=unselectable
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+
 $white: #ffffff
 $black: #000000
 $calendar-background: $white
@@ -63,6 +70,7 @@ $day-disabled-color: #D6D6D6
         margin-bottom: 10px
 
         .day
+          +unselectable
           width: calc(100% / 7)
           font-size: 12px
           font-weight: 500
@@ -74,6 +82,7 @@ $day-disabled-color: #D6D6D6
         display: block
 
         .day
+          +unselectable
           width: calc(100% / 7)
           display: flex
           float: left
@@ -84,7 +93,6 @@ $day-disabled-color: #D6D6D6
           justify-content: center
           border-radius: 50%
           border: 2px solid transparent
-          cursor: pointer
           margin: 2px 0
           font-size: 14px
 
@@ -93,5 +101,9 @@ $day-disabled-color: #D6D6D6
             display: block
             padding-top: 100%
 
-          &:hover
+          &:hover:not(.is-prev-month)
             border-color: $day-color
+            cursor: pointer
+
+          &.is-prev-month
+            color: transparent
