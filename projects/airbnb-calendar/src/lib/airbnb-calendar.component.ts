@@ -9,6 +9,23 @@ import {
   EventEmitter
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { Calendar, Day, CalendarOptions, mergeCalendarOptions } from './airbnb-calendar.interface';
+import {
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  getDate,
+  getMonth,
+  getYear,
+  isToday,
+  isSameDay,
+  isSameMonth,
+  isBefore,
+  isAfter,
+  format,
+  addMonths,
+  setDay
+} from 'date-fns';
 
 @Component({
   selector: 'airbnb-calendar',
@@ -17,8 +34,14 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: AirbnbCalendarComponent, multi: true }]
 })
 export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, OnChanges {
+  @Input() options: CalendarOptions = mergeCalendarOptions();
+
+  private date: Date = new Date();
   private innerValue: string | null = null;
   private displayValue: string | null = null;
+
+  calendar: Calendar;
+  calendarNext: Calendar;
 
   get value(): string | null {
     return this.innerValue;
@@ -43,9 +66,48 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
   private onTouchedCallback: () => void = () => {};
   private onChangeCallback: (_: any) => void = () => {};
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(private elementRef: ElementRef) {
+    const date = new Date(this.date.getTime());
+    this.calendar = this.generateCalendar(date);
+    this.calendarNext = this.generateCalendar(addMonths(date, 1));
+  }
 
   ngOnInit(): void {}
 
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('options' in changes) {
+      this.options = mergeCalendarOptions(this.options);
+    }
+  }
+
+  private generateCalendar(date: Date = new Date()): Calendar {
+    const [start, end] = [startOfMonth(date), endOfMonth(date)];
+    const days = eachDayOfInterval({ start, end }).map(d => {
+      return {
+        date: d,
+        day: getDate(d),
+        month: getMonth(d),
+        year: getYear(d),
+        isSameMonth: isSameMonth(d, start),
+        isToday: isToday(d),
+        isSelectable: true,
+        isSelected: false
+      };
+    });
+
+    let dayNames = [];
+    const dayStart = this.options.firstCalendarDay || 0;
+    for (let i = dayStart; i <= 6 + dayStart; i++) {
+      const date = setDay(new Date(), i);
+      dayNames.push(format(date, this.options.formatDays || 'eeeeee', { locale: this.options.locale }));
+    }
+
+    return {
+      month: getMonth(date),
+      year: getYear(date),
+      title: format(date, this.options.formatTitle || 'MMMM uuuu'),
+      days,
+      dayNames
+    };
+  }
 }

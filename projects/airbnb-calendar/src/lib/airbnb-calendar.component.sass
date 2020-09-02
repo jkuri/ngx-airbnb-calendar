@@ -5,6 +5,9 @@ $calendar-width: 850px
 $calendar-height: 410px
 $border-radius: 10px
 $box-shadow: 0 6px 20px rgba($black, .2)
+$day-name-color: #717171
+$day-color: #222222
+$day-disabled-color: #D6D6D6
 
 .airbnb-calendar-container
   display: block
@@ -31,7 +34,7 @@ $box-shadow: 0 6px 20px rgba($black, .2)
       .controls
         display: flex
         width: 100%
-        margin-bottom: 15px
+        margin-bottom: 25px
         align-items: center
         justify-content: center
         position: relative
@@ -53,5 +56,42 @@ $box-shadow: 0 6px 20px rgba($black, .2)
         .chevron-right
           right: 0
 
+      .calendar-day-names
+        width: 100%
+        display: flex
+        align-items: center
+        margin-bottom: 10px
 
+        .day
+          width: calc(100% / 7)
+          font-size: 12px
+          font-weight: 500
+          color: $day-name-color
+          text-align: center
 
+      .calendar-days
+        width: 100%
+        display: block
+
+        .day
+          width: calc(100% / 7)
+          display: flex
+          float: left
+          position: relative
+          font-weight: 500
+          color: $day-color
+          align-items: center
+          justify-content: center
+          border-radius: 50%
+          border: 2px solid transparent
+          cursor: pointer
+          margin: 2px 0
+          font-size: 14px
+
+          &::before
+            content: ''
+            display: block
+            padding-top: 100%
+
+          &:hover
+            border-color: $day-color
