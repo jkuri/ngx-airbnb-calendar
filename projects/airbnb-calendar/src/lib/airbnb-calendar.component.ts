@@ -9,7 +9,7 @@ import {
   EventEmitter
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { Calendar, CalendarOptions, mergeCalendarOptions } from './airbnb-calendar.interface';
+import { Calendar, CalendarOptions, mergeCalendarOptions, Day } from './airbnb-calendar.interface';
 import {
   startOfMonth,
   endOfMonth,
@@ -81,35 +81,44 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
 
   private generateCalendar(date: Date = new Date()): Calendar {
     const [start, end] = [startOfMonth(date), endOfMonth(date)];
-    const days = eachDayOfInterval({ start, end }).map(d => {
-      return {
-        date: d,
-        day: getDate(d),
-        month: getMonth(d),
-        year: getYear(d),
-        isSameMonth: isSameMonth(d, start),
-        isToday: isToday(d),
-        isSelectable: true,
-        isSelected: false
-      };
-    });
-    const firstDay = this.options.firstCalendarDay || 0;
-    const tmp = getDay(start) - firstDay;
-    const prevDays = tmp < 0 ? 7 - firstDay : tmp;
-    for (let i = 1; i <= prevDays; i++) {
-      const currentDate = subDays(start, i);
-      const d = {
-        date: currentDate,
-        day: getDate(currentDate),
-        month: getMonth(currentDate),
-        year: getYear(currentDate),
-        isSameMonth: false,
-        isToday: false,
-        isSelectable: false,
-        isSelected: false
-      };
-      days.unshift(d);
-    }
+    const days = eachDayOfInterval({ start, end })
+      .map(d => {
+        return {
+          date: d,
+          day: getDate(d),
+          month: getMonth(d),
+          year: getYear(d),
+          isSameMonth: isSameMonth(d, start),
+          isToday: isToday(d),
+          isSelectable: true,
+          isSelected: false
+        };
+      })
+      .reduce((acc: Day[], curr: Day, index: number, arr: Day[]) => {
+        const first = this.options.firstCalendarDay || 0;
+        const tmp = getDay(start) - first;
+
+        if (arr.length - 1 === index) {
+          acc.unshift(
+            ...[...new Array(tmp)].map((_, i) => {
+              const curr = subDays(start, i);
+              return {
+                date: curr,
+                day: getDate(curr),
+                month: getMonth(curr),
+                year: getYear(curr),
+                isSameMonth: false,
+                isToday: false,
+                isSelectable: false,
+                isSelected: false
+              };
+            })
+          );
+        }
+
+        return acc.concat(curr);
+      }, [])
+      .sort((a, b) => (a.date > b.date ? 1 : -1));
 
     let dayNames = [];
     const dayStart = this.options.firstCalendarDay || 0;
