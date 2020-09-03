@@ -12,6 +12,7 @@ export interface Day {
   isSelectable: boolean;
   isVisible: boolean;
   isIncluded: boolean;
+  isActive: boolean;
 }
 
 export interface Calendar {

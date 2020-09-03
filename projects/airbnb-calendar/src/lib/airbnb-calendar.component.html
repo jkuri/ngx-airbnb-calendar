@@ -18,8 +18,9 @@
             'is-today': day.isToday,
             'is-selected': day.isSelected,
             'is-disabled': !day.isSelectable,
-            'is-active': fromToDate.from === day.date || fromToDate.to === day.date,
-            'is-included': day.isIncluded
+            'is-included': day.isIncluded,
+            'is-invisible': !day.isVisible,
+            'is-active': day.isActive || (fromToDate.from === day.date || fromToDate.to === day.date)
           }" (click)="selectDay(i, 'primary')">
           {{ day.day }}
         </span>
@@ -42,9 +43,9 @@
           'is-prev-month': !day.isSameMonth,
           'is-today': day.isToday,
           'is-selected': day.isSelected,
-          'is-visible': day.isVisible,
-          'is-active': fromToDate.from === day.date || fromToDate.to === day.date,
-          'is-included': day.isIncluded
+          'is-included': day.isIncluded,
+          'is-invisible': !day.isVisible,
+          'is-active': day.isActive || (fromToDate.from === day.date || fromToDate.to === day.date)
         }" (click)="selectDay(i, 'secondary')">
           {{ day.day }}
         </span>

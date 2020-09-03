@@ -87,14 +87,16 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
     }
   }
 
-  selectDay(index: number, calendar: 'primary' | 'secondary'): void {
-    const cal = calendar === 'primary' ? this.calendar : this.calendarNext;
-    if (!this.fromToDate.from) {
-      this.fromToDate.from = cal.days[index].date;
-    } else if (!!this.fromToDate.from && !this.fromToDate.to) {
-      this.fromToDate.to = cal.days[index].date;
-    } else if (!!this.fromToDate.to) {
-      this.fromToDate = { from: cal.days[index].date, to: null };
+  selectDay(index?: number, calendar?: 'primary' | 'secondary'): void {
+    if (index) {
+      const cal = calendar === 'primary' ? this.calendar : this.calendarNext;
+      if (!this.fromToDate.from) {
+        this.fromToDate.from = cal.days[index].date;
+      } else if (!!this.fromToDate.from && !this.fromToDate.to) {
+        this.fromToDate.to = cal.days[index].date;
+      } else if (!!this.fromToDate.to) {
+        this.fromToDate = { from: cal.days[index].date, to: null };
+      }
     }
 
     this.calendar.days = this.calendar.days.map((d: Day) => {
@@ -102,20 +104,24 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
         ...d,
         ...{
           isIncluded:
-            isAfter(d.date, this.fromToDate.from || new Date()) && isBefore(d.date, this.fromToDate.to || new Date())
+            isAfter(d.date, this.fromToDate.from || new Date()) && isBefore(d.date, this.fromToDate.to || new Date()),
+          isActive:
+            isSameDay(this.fromToDate.from || new Date(), d.date) || isSameDay(this.fromToDate.to as Date, d.date)
         }
       };
     });
 
-    // this.calendarNext.days = this.calendar.days.map((d: Day) => {
-    //   return {
-    //     ...d,
-    //     ...{
-    //       isIncluded:
-    //         isAfter(d.date, this.fromToDate.from || new Date()) && isBefore(d.date, this.fromToDate.to || new Date())
-    //     }
-    //   };
-    // });
+    this.calendarNext.days = this.calendarNext.days.map((d: Day) => {
+      return {
+        ...d,
+        ...{
+          isIncluded:
+            isAfter(d.date, this.fromToDate.from || new Date()) && isBefore(d.date, this.fromToDate.to || new Date()),
+          isActive:
+            isSameDay(this.fromToDate.from || new Date(), d.date) || isSameDay(this.fromToDate.to as Date, d.date)
+        }
+      };
+    });
   }
 
   nextMonth(): void {
@@ -123,6 +129,7 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
     const date = new Date(this.date.getTime());
     this.calendar = this.generateCalendar(date);
     this.calendarNext = this.generateCalendar(addMonths(date, 1));
+    this.selectDay();
   }
 
   prevMonth(): void {
@@ -130,6 +137,7 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
     const date = new Date(this.date.getTime());
     this.calendar = this.generateCalendar(date);
     this.calendarNext = this.generateCalendar(addMonths(date, 1));
+    this.selectDay();
   }
 
   private generateCalendar(date: Date = new Date()): Calendar {
