@@ -10,6 +10,7 @@ export interface Day {
   isToday: boolean;
   isSelected: boolean;
   isSelectable: boolean;
+  isVisible: boolean;
 }
 
 export interface Calendar {
@@ -31,6 +32,7 @@ export interface CalendarOptions {
   formatDays?: string;
   firstCalendarDay?: number;
   locale?: Locale;
+  showPreviousDays?: boolean;
 }
 
 export function mergeCalendarOptions(opts?: CalendarOptions): CalendarOptions {
@@ -45,5 +47,6 @@ const defaultOptions: CalendarOptions = {
   formatTitle: 'MMMM uuuu',
   formatDays: 'eeeeee',
   firstCalendarDay: 0,
-  locale: enUS
+  locale: enUS,
+  showPreviousDays: false
 };

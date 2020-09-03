@@ -23,7 +23,14 @@ import {
   addMonths,
   setDay,
   getDay,
-  subDays
+  subDays,
+  subMonths,
+  isAfter,
+  isBefore,
+  setHours,
+  isSameDay,
+  setMinutes,
+  setSeconds
 } from 'date-fns';
 
 @Component({
@@ -79,10 +86,29 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
     }
   }
 
+  nextMonth(): void {
+    this.date = addMonths(this.date, 1);
+    const date = new Date(this.date.getTime());
+    this.calendar = this.generateCalendar(date);
+    this.calendarNext = this.generateCalendar(addMonths(date, 1));
+  }
+
+  prevMonth(): void {
+    this.date = subMonths(this.date, 1);
+    const date = new Date(this.date.getTime());
+    this.calendar = this.generateCalendar(date);
+    this.calendarNext = this.generateCalendar(addMonths(date, 1));
+  }
+
   private generateCalendar(date: Date = new Date()): Calendar {
-    const [start, end] = [startOfMonth(date), endOfMonth(date)];
-    const days = eachDayOfInterval({ start, end })
+    const [start, end, now] = [
+      setHours(startOfMonth(date), 0),
+      setHours(endOfMonth(date), 0),
+      setSeconds(setMinutes(setHours(new Date(), 0), 0), 0)
+    ];
+    const days: Day[] = eachDayOfInterval({ start, end })
       .map(d => {
+        d = setSeconds(setMinutes(setHours(d, 0), 0), 0);
         return {
           date: d,
           day: getDate(d),
@@ -90,8 +116,9 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
           year: getYear(d),
           isSameMonth: isSameMonth(d, start),
           isToday: isToday(d),
-          isSelectable: true,
-          isSelected: false
+          isSelectable: isBefore(now, d) || isSameDay(now, d),
+          isSelected: false,
+          isVisible: true
         };
       })
       .reduce((acc: Day[], curr: Day, index: number, arr: Day[]) => {
@@ -101,7 +128,7 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
         if (arr.length - 1 === index) {
           acc.unshift(
             ...[...new Array(tmp)].map((_, i) => {
-              const curr = subDays(start, i);
+              const curr = setSeconds(setMinutes(setHours(subDays(start, i + 1), 0), 0), 0);
               return {
                 date: curr,
                 day: getDate(curr),
@@ -110,7 +137,8 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
                 isSameMonth: false,
                 isToday: false,
                 isSelectable: false,
-                isSelected: false
+                isSelected: false,
+                isVisible: !!this.options.showPreviousDays
               };
             })
           );
@@ -118,7 +146,7 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
 
         return acc.concat(curr);
       }, [])
-      .sort((a, b) => (a.date > b.date ? 1 : -1));
+      .sort((a, b) => (a.date >= b.date ? 1 : -1));
 
     let dayNames = [];
     const dayStart = this.options.firstCalendarDay || 0;
