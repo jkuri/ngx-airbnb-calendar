@@ -48,6 +48,7 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
 
   calendar: Calendar;
   calendarNext: Calendar;
+  fromToDate: { from: Date | null; to: Date | null } = { from: null, to: null };
 
   get value(): string | null {
     return this.innerValue;
@@ -86,6 +87,37 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
     }
   }
 
+  selectDay(index: number, calendar: 'primary' | 'secondary'): void {
+    const cal = calendar === 'primary' ? this.calendar : this.calendarNext;
+    if (!this.fromToDate.from) {
+      this.fromToDate.from = cal.days[index].date;
+    } else if (!!this.fromToDate.from && !this.fromToDate.to) {
+      this.fromToDate.to = cal.days[index].date;
+    } else if (!!this.fromToDate.to) {
+      this.fromToDate = { from: cal.days[index].date, to: null };
+    }
+
+    this.calendar.days = this.calendar.days.map((d: Day) => {
+      return {
+        ...d,
+        ...{
+          isIncluded:
+            isAfter(d.date, this.fromToDate.from || new Date()) && isBefore(d.date, this.fromToDate.to || new Date())
+        }
+      };
+    });
+
+    // this.calendarNext.days = this.calendar.days.map((d: Day) => {
+    //   return {
+    //     ...d,
+    //     ...{
+    //       isIncluded:
+    //         isAfter(d.date, this.fromToDate.from || new Date()) && isBefore(d.date, this.fromToDate.to || new Date())
+    //     }
+    //   };
+    // });
+  }
+
   nextMonth(): void {
     this.date = addMonths(this.date, 1);
     const date = new Date(this.date.getTime());
@@ -118,7 +150,8 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
           isToday: isToday(d),
           isSelectable: isBefore(now, d) || isSameDay(now, d),
           isSelected: false,
-          isVisible: true
+          isVisible: true,
+          isIncluded: isAfter(d, this.fromToDate.from || new Date()) && isBefore(d, this.fromToDate.to || new Date())
         };
       })
       .reduce((acc: Day[], curr: Day, index: number, arr: Day[]) => {
@@ -138,7 +171,9 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
                 isToday: false,
                 isSelectable: false,
                 isSelected: false,
-                isVisible: !!this.options.showPreviousDays
+                isVisible: !!this.options.showPreviousDays,
+                isIncluded:
+                  isAfter(curr, this.fromToDate.from || new Date()) && isBefore(curr, this.fromToDate.to || new Date())
               };
             })
           );

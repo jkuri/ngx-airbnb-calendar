@@ -11,6 +11,8 @@ $box-shadow: 0 6px 20px rgba($black, .2)
 $day-name-color: #717171
 $day-color: #222222
 $day-disabled-color: #D6D6D6
+$day-included: #F7F7F7
+$day-border: #222222
 
 .airbnb-calendar-container
   display: block
@@ -101,6 +103,7 @@ $day-disabled-color: #D6D6D6
           &:hover:not(.is-prev-month)
             border-color: $day-color
             cursor: pointer
+            border-radius: 50%
 
           &.is-disabled
             color: $day-disabled-color
@@ -110,4 +113,15 @@ $day-disabled-color: #D6D6D6
 
           &.is-prev-month
             color: transparent
+
+          &.is-active
+            background: $day-border
+            color: $white
+            border-color: $day-border
+
+          &.is-included
+            background: $day-included
+            color: $day-color
+            border-color: $day-included
+            border-radius: 0
 
