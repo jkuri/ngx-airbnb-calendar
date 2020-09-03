@@ -46,6 +46,7 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
   private innerValue: string | null = null;
   private displayValue: string | null = null;
 
+  isOpened: boolean = false;
   calendar: Calendar;
   calendarNext: Calendar;
   fromToDate: { from: Date | null; to: Date | null } = { from: null, to: null };
@@ -159,7 +160,8 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
           isSelectable: isBefore(now, d) || isSameDay(now, d),
           isSelected: false,
           isVisible: true,
-          isIncluded: isAfter(d, this.fromToDate.from || new Date()) && isBefore(d, this.fromToDate.to || new Date())
+          isIncluded: isAfter(d, this.fromToDate.from || new Date()) && isBefore(d, this.fromToDate.to || new Date()),
+          isActive: false
         };
       })
       .reduce((acc: Day[], curr: Day, index: number, arr: Day[]) => {
@@ -181,7 +183,8 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
                 isSelected: false,
                 isVisible: !!this.options.showPreviousDays,
                 isIncluded:
-                  isAfter(curr, this.fromToDate.from || new Date()) && isBefore(curr, this.fromToDate.to || new Date())
+                  isAfter(curr, this.fromToDate.from || new Date()) && isBefore(curr, this.fromToDate.to || new Date()),
+                isActive: false
               };
             })
           );

@@ -7,19 +7,23 @@ $calendar-background: $white
 $calendar-width: 850px
 $calendar-height: 410px
 $border-radius: 10px
-$box-shadow: 0 6px 20px rgba($black, .2)
+$box-shadow: 0 6px 10px rgba($black, .2)
 $day-name-color: #717171
 $day-color: #222222
 $day-disabled-color: #D6D6D6
 $day-included: #F7F7F7
 $day-border: #222222
 
+\:host
+  display: block
+  position: relative
+  z-index: 10
+
 .airbnb-calendar-container
   display: block
   position: absolute
-  top: 0
-  left: 50%
-  transform: translateX(-50%)
+  top: 5px
+  left: 0
   height: $calendar-height
   width: $calendar-width
 

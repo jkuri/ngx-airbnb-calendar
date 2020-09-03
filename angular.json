@@ -62,7 +62,7 @@
             "styles": ["projects/demo/src/styles/app.sass"],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/styles"]
+              "includePaths": ["projects/demo/src/styles"]
             }
           },
           "configurations": {
@@ -124,7 +124,7 @@
             "styles": ["projects/demo/src/styles/app.sass"],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/styles"]
+              "includePaths": ["projects/demo/src/styles"]
             }
           }
         },
