@@ -37,9 +37,7 @@ export class AirbnbCalendarDirective {
       })
     );
 
-    this.component.onDestroy(() => {
-      this.sub.unsubscribe();
-    });
+    this.component.onDestroy(() => this.sub.unsubscribe());
   }
 
   @HostListener('focus', ['$event.target']) onFocus(): void {

@@ -6,7 +6,8 @@ import {
   SimpleChanges,
   HostListener,
   ElementRef,
-  EventEmitter
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Calendar, CalendarOptions, mergeCalendarOptions, Day } from './airbnb-calendar.interface';
@@ -41,6 +42,9 @@ import {
 })
 export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, OnChanges {
   @Input() options: CalendarOptions = mergeCalendarOptions();
+  @Output() modelValue: EventEmitter<string> = new EventEmitter<string>();
+  @Output() fromValue: EventEmitter<string | null> = new EventEmitter<string | null>();
+  @Output() toValue: EventEmitter<string | null> = new EventEmitter<string | null>();
 
   private date: Date = new Date();
   private innerValue: string | null = null;
@@ -49,8 +53,6 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
   calendar: Calendar;
   calendarNext: Calendar;
   fromToDate: { from: Date | null; to: Date | null } = { from: null, to: null };
-
-  modelValue: EventEmitter<string> = new EventEmitter<string>();
 
   get value(): string | null {
     return this.innerValue;
@@ -94,15 +96,23 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
       const cal = calendar === 'primary' ? this.calendar : this.calendarNext;
       if (!this.fromToDate.from) {
         this.fromToDate.from = cal.days[index].date;
+        const from = format(this.fromToDate.from as Date, this.options.format as string);
+        this.value = from;
+        this.modelValue.next(from);
+        this.fromValue.next(from);
       } else if (this.fromToDate.from && !this.fromToDate.to) {
         this.fromToDate.to = cal.days[index].date;
-        this.value = `${format(this.fromToDate.from, this.options.format as string)}-${format(
-          this.fromToDate.to,
-          this.options.format as string
-        )}`;
+        const from = format(this.fromToDate.from as Date, this.options.format as string);
+        const to = format(this.fromToDate.to as Date, this.options.format as string);
+        this.value = `${from}-${to}`;
         this.modelValue.next(this.value);
+        this.toValue.next(this.value);
       } else if (this.fromToDate.to) {
         this.fromToDate = { from: cal.days[index].date, to: null };
+        const from = format(this.fromToDate.from as Date, this.options.format as string);
+        this.value = from;
+        this.modelValue.next(from);
+        this.fromValue.next(from);
       }
     }
 
