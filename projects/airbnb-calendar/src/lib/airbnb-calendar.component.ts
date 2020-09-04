@@ -3,11 +3,10 @@ import {
   OnInit,
   Input,
   OnChanges,
-  SimpleChanges,
-  HostListener,
   ElementRef,
   EventEmitter,
-  Output
+  Output,
+  ChangeDetectorRef
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Calendar, CalendarOptions, mergeCalendarOptions, Day } from './airbnb-calendar.interface';
@@ -41,7 +40,7 @@ import {
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: AirbnbCalendarComponent, multi: true }]
 })
 export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, OnChanges {
-  @Input() options: CalendarOptions = mergeCalendarOptions();
+  @Input() options!: CalendarOptions;
   @Output() modelValue: EventEmitter<string> = new EventEmitter<string>();
   @Output() fromValue: EventEmitter<string | null> = new EventEmitter<string | null>();
   @Output() toValue: EventEmitter<string | null> = new EventEmitter<string | null>();
@@ -50,8 +49,8 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
   private innerValue: string | null = null;
 
   isOpened: boolean = false;
-  calendar: Calendar;
-  calendarNext: Calendar;
+  calendar!: Calendar;
+  calendarNext!: Calendar;
   fromToDate: { from: Date | null; to: Date | null } = { from: null, to: null };
 
   get value(): string | null {
@@ -77,18 +76,16 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
   private onTouchedCallback: () => void = () => {};
   private onChangeCallback: (_: any) => void = () => {};
 
-  constructor(private elementRef: ElementRef) {
-    const date = new Date(this.date.getTime());
-    this.calendar = this.generateCalendar(date);
-    this.calendarNext = this.generateCalendar(addMonths(date, 1));
+  constructor(private elementRef: ElementRef, public cd: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.options = mergeCalendarOptions(this.options);
+    this.initCalendar();
   }
 
-  ngOnInit(): void {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if ('options' in changes) {
-      this.options = mergeCalendarOptions(this.options);
-    }
+  ngOnChanges(): void {
+    this.options = mergeCalendarOptions(this.options);
+    this.initCalendar();
   }
 
   selectDay(index?: number, calendar?: 'primary' | 'secondary'): void {
@@ -143,18 +140,20 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
 
   nextMonth(): void {
     this.date = addMonths(this.date, 1);
-    const date = new Date(this.date.getTime());
-    this.calendar = this.generateCalendar(date);
-    this.calendarNext = this.generateCalendar(addMonths(date, 1));
+    this.initCalendar();
     this.selectDay();
   }
 
   prevMonth(): void {
     this.date = subMonths(this.date, 1);
+    this.initCalendar();
+    this.selectDay();
+  }
+
+  private initCalendar(): void {
     const date = new Date(this.date.getTime());
     this.calendar = this.generateCalendar(date);
     this.calendarNext = this.generateCalendar(addMonths(date, 1));
-    this.selectDay();
   }
 
   private generateCalendar(date: Date = new Date()): Calendar {
@@ -184,7 +183,7 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
         const first = this.options.firstCalendarDay || 0;
         const tmp = getDay(start) - first;
 
-        if (arr.length - 1 === index) {
+        if (tmp > 0 && arr.length - 1 === index) {
           acc.unshift(
             ...[...new Array(tmp)].map((_, i) => {
               const curr = setSeconds(setMinutes(setHours(subDays(start, i + 1), 0), 0), 0);
@@ -210,7 +209,7 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
       }, [])
       .sort((a, b) => (a.date >= b.date ? 1 : -1));
 
-    let dayNames = [];
+    const dayNames = [];
     const dayStart = this.options.firstCalendarDay || 0;
     for (let i = dayStart; i <= 6 + dayStart; i++) {
       const date = setDay(new Date(), i);

@@ -46,7 +46,6 @@ const defaultOptions: CalendarOptions = {
   maxYear: getYear(new Date()) + 30,
   placeholder: '',
   format: 'yyyy/LL/dd',
-  formatTitle: 'MMMM uuuu',
   formatDays: 'eeeeee',
   firstCalendarDay: 0,
   locale: enUS,

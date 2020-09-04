@@ -12,11 +12,14 @@ import {
 import { AirbnbCalendarComponent } from './airbnb-calendar.component';
 import { Subscription } from 'rxjs';
 import { NgModel } from '@angular/forms';
+import { CalendarOptions, mergeCalendarOptions } from './airbnb-calendar.interface';
 
 @Directive({
   selector: '[airbnb-calendar]'
 })
-export class AirbnbCalendarDirective {
+export class AirbnbCalendarDirective implements OnChanges {
+  @Input() options!: CalendarOptions;
+
   component: ComponentRef<AirbnbCalendarComponent>;
   componentFactory: ComponentFactory<AirbnbCalendarComponent>;
   sub: Subscription = new Subscription();
@@ -38,6 +41,11 @@ export class AirbnbCalendarDirective {
     );
 
     this.component.onDestroy(() => this.sub.unsubscribe());
+  }
+
+  ngOnChanges(): void {
+    this.component.instance.options = mergeCalendarOptions(this.options);
+    this.component.instance.cd.detectChanges();
   }
 
   @HostListener('focus', ['$event.target']) onFocus(): void {
