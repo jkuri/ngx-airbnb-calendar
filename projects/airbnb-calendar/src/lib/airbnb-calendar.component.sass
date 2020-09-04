@@ -18,6 +18,10 @@ $day-border: #222222
   display: block
   position: relative
   z-index: 10
+  box-sizing: border-box
+
+  *, *::before, *::after
+    box-sizing: inherit
 
 .airbnb-calendar-container
   display: block
@@ -26,6 +30,7 @@ $day-border: #222222
   left: 0
   height: $calendar-height
   width: $calendar-width
+  background: $white
 
   .airbnb-calendar
     display: block
