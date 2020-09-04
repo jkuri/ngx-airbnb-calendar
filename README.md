@@ -11,6 +11,8 @@ ng add ngx-airbnb-calendar
 Then add `AirbnbCalendarModule` into your `AppModule`
 
 ```ts
+import { AirbnbCalendarModule } from 'ngx-airbnb-calendar';
+
 @NgModule({
   imports: [BrowserModule, AirbnbCalendarModule],
   declarations: [AppComponent]
