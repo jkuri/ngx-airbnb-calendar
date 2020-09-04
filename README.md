@@ -1,5 +1,7 @@
 # AirbnbCalendar
 
+You can find online running demo [here](https://codesandbox.io/s/ngx-airbnb-calendar-m556t).
+
 ## Usage
 
 Install or add via `ng`
