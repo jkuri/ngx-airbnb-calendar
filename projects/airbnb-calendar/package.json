@@ -1,5 +1,5 @@
 {
-  "name": "ng-airbnb-calendar",
+  "name": "ngx-airbnb-calendar",
   "version": "0.1.0",
   "peerDependencies": {
     "@angular/common": "^10.0.14",
