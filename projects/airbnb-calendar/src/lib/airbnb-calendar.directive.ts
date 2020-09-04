@@ -5,9 +5,13 @@ import {
   ComponentFactory,
   HostListener,
   ElementRef,
-  ComponentRef
+  ComponentRef,
+  Input,
+  OnChanges
 } from '@angular/core';
 import { AirbnbCalendarComponent } from './airbnb-calendar.component';
+import { Subscription } from 'rxjs';
+import { NgModel } from '@angular/forms';
 
 @Directive({
   selector: '[airbnb-calendar]'
@@ -15,11 +19,27 @@ import { AirbnbCalendarComponent } from './airbnb-calendar.component';
 export class AirbnbCalendarDirective {
   component: ComponentRef<AirbnbCalendarComponent>;
   componentFactory: ComponentFactory<AirbnbCalendarComponent>;
+  sub: Subscription = new Subscription();
 
-  constructor(private cfr: ComponentFactoryResolver, private vc: ViewContainerRef, private el: ElementRef) {
+  constructor(
+    private cfr: ComponentFactoryResolver,
+    private vc: ViewContainerRef,
+    private el: ElementRef,
+    private ngModel: NgModel
+  ) {
     this.componentFactory = this.cfr.resolveComponentFactory(AirbnbCalendarComponent);
     this.vc.clear();
     this.component = this.vc.createComponent(this.componentFactory);
+
+    this.sub.add(
+      this.component.instance.modelValue.subscribe((event: string) => {
+        this.ngModel.control.patchValue(event);
+      })
+    );
+
+    this.component.onDestroy(() => {
+      this.sub.unsubscribe();
+    });
   }
 
   @HostListener('focus', ['$event.target']) onFocus(): void {

@@ -44,12 +44,13 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
 
   private date: Date = new Date();
   private innerValue: string | null = null;
-  private displayValue: string | null = null;
 
   isOpened: boolean = false;
   calendar: Calendar;
   calendarNext: Calendar;
   fromToDate: { from: Date | null; to: Date | null } = { from: null, to: null };
+
+  modelValue: EventEmitter<string> = new EventEmitter<string>();
 
   get value(): string | null {
     return this.innerValue;
@@ -93,9 +94,14 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
       const cal = calendar === 'primary' ? this.calendar : this.calendarNext;
       if (!this.fromToDate.from) {
         this.fromToDate.from = cal.days[index].date;
-      } else if (!!this.fromToDate.from && !this.fromToDate.to) {
+      } else if (this.fromToDate.from && !this.fromToDate.to) {
         this.fromToDate.to = cal.days[index].date;
-      } else if (!!this.fromToDate.to) {
+        this.value = `${format(this.fromToDate.from, this.options.format as string)}-${format(
+          this.fromToDate.to,
+          this.options.format as string
+        )}`;
+        this.modelValue.next(this.value);
+      } else if (this.fromToDate.to) {
         this.fromToDate = { from: cal.days[index].date, to: null };
       }
     }
