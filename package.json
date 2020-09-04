@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve demo --open --port 4550",
     "build": "ng build airbnb-calendar --prod",
+    "build:lib": "ng build --prod airbnb-calendar",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
