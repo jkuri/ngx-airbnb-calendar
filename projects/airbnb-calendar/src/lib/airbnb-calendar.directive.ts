@@ -59,6 +59,8 @@ export class AirbnbCalendarDirective implements OnChanges {
     if (
       this.component.instance.fromToDate.from &&
       this.component.instance.fromToDate.to &&
+      container &&
+      e.target &&
       (container === e.target || container.contains(e.target)) &&
       [].findIndex.call(controls, (ctrl: HTMLElement) => ctrl.contains(e.target as Node)) === -1
     ) {
@@ -98,6 +100,18 @@ export class AirbnbCalendarDirective implements OnChanges {
       !container.contains(e.target)
     ) {
       this.component.instance.isOpened = false;
+    }
+  }
+
+  @HostListener('document:keyup', ['$event']) onKeyup(ev: KeyboardEvent): void {
+    if (!this.component.instance.isOpened) {
+      return;
+    }
+
+    if (ev.keyCode === 27) {
+      this.component.instance.isOpened = false;
+      this.component.instance.cd.detectChanges();
+      this.el.nativeElement.blur();
     }
   }
 }
