@@ -1,24 +1,33 @@
 # AirbnbCalendar
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.14.
+You can find online running demo [here](https://codesandbox.io/s/ngx-airbnb-calendar-m556t).
 
-## Code scaffolding
+## Usage
 
-Run `ng generate component component-name --project airbnb-calendar` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project airbnb-calendar`.
-> Note: Don't forget to add `--project airbnb-calendar` or else it will be added to the default project in your `angular.json` file. 
+Install or add via `ng`
 
-## Build
+```sh
+ng add ngx-airbnb-calendar
+```
 
-Run `ng build airbnb-calendar` to build the project. The build artifacts will be stored in the `dist/` directory.
+Then add `AirbnbCalendarModule` into your `AppModule`
 
-## Publishing
+```ts
+import { AirbnbCalendarModule } from 'ngx-airbnb-calendar';
 
-After building your library with `ng build airbnb-calendar`, go to the dist folder `cd dist/airbnb-calendar` and run `npm publish`.
+@NgModule({
+  imports: [BrowserModule, AirbnbCalendarModule],
+  declarations: [AppComponent]
+})
+export class AppModule {}
+```
 
-## Running unit tests
+And use `airbnb-calendar` directive on your `<input />`
 
-Run `ng test airbnb-calendar` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```html
+<input type="text" [(ngModel)]="value" airbnb-calendar />
+```
 
-## Further help
+## License
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+MIT
