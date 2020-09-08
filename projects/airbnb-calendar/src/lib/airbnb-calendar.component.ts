@@ -104,6 +104,10 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
         this.value = `${from}-${to}`;
         this.modelValue.next(this.value);
         this.toValue.next(this.value);
+
+        if (this.options.closeOnSelected) {
+          this.isOpened = false;
+        }
       } else if (this.fromToDate.to) {
         this.fromToDate = { from: cal.days[index].date, to: null };
         const from = format(this.fromToDate.from as Date, this.options.format as string);

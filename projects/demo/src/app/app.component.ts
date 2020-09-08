@@ -10,6 +10,7 @@ export class AppComponent {
   date: string | null = null;
   options: CalendarOptions = {
     firstCalendarDay: 1,
-    format: 'LL/dd/yyyy'
+    format: 'LL/dd/yyyy',
+    closeOnSelected: true
   };
 }
