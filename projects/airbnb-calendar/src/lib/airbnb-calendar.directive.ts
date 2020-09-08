@@ -53,6 +53,31 @@ export class AirbnbCalendarDirective implements OnChanges {
   }
 
   @HostListener('document:click', ['$event']) onBlurClick(e: MouseEvent): void {
+    const container = this.el.nativeElement.parentElement.querySelector('.airbnb-calendar-container');
+    const controls = this.el.nativeElement.parentElement.querySelectorAll('.controls');
+
+    if (
+      this.component.instance.fromToDate.from &&
+      this.component.instance.fromToDate.to &&
+      (container === e.target || container.contains(e.target)) &&
+      [].findIndex.call(controls, (ctrl: HTMLElement) => ctrl.contains(e.target as Node)) === -1
+    ) {
+      this.component.instance.fromToDate = { from: null, to: null };
+      this.component.instance.value = null;
+      this.component.instance.modelValue.next('');
+      this.component.instance.fromValue.next('');
+      this.component.instance.toValue.next('');
+      this.component.instance.calendar.days = this.component.instance.calendar.days.map(d => ({
+        ...d,
+        ...{ isIncluded: false, isActive: false }
+      }));
+      this.component.instance.calendarNext.days = this.component.instance.calendarNext.days.map(d => ({
+        ...d,
+        ...{ isIncluded: false, isActive: false }
+      }));
+      this.component.instance.cd.detectChanges();
+    }
+
     if (!this.component.instance.isOpened) {
       return;
     }
@@ -66,7 +91,6 @@ export class AirbnbCalendarDirective implements OnChanges {
       return;
     }
 
-    const container = this.el.nativeElement.parentElement.querySelector('.airbnb-calendar-container');
     if (
       container &&
       container !== e.target &&

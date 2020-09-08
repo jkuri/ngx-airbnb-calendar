@@ -5,8 +5,8 @@ $white: #ffffff
 $black: #000000
 $calendar-background: $white
 $calendar-width: 850px
-$calendar-height: 370px
-$border-radius: 10px
+$calendar-height: 380px
+$border-radius: 4px
 $box-shadow: 0 6px 10px rgba($black, .2)
 $day-name-color: #717171
 $day-color: #222222
@@ -32,6 +32,8 @@ $border-default: #EAEDF3
   height: $calendar-height
   width: $calendar-width
   background: $white
+  border-radius: $border-radius
+  box-shadow: 1px 2px 3px rgba($black, .05)
 
   .airbnb-calendar
     display: block
@@ -110,13 +112,14 @@ $border-default: #EAEDF3
             display: block
             padding-top: 100%
 
-          &:hover:not(.is-prev-month)
+          &:hover:not(.is-disabled)
             border-color: $day-color
             cursor: pointer
             border-radius: 50%
 
           &.is-disabled
             color: $day-disabled-color
+            pointer-events: none
 
           &.is-prev-month
             color: transparent

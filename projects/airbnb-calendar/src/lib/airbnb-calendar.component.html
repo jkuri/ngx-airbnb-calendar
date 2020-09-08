@@ -11,16 +11,20 @@
         <span *ngFor="let name of calendar.dayNames" class="day">{{ name }}</span>
       </div>
       <div class="calendar-days">
-        <span *ngFor="let day of calendar.days; let i = index" [ngClass]="{
-            'day': true,
+        <span
+          *ngFor="let day of calendar.days; let i = index"
+          [ngClass]="{
+            day: true,
             'is-prev-month': !day.isSameMonth,
             'is-today': day.isToday,
             'is-selected': day.isSelected,
             'is-disabled': !day.isSelectable,
             'is-included': day.isIncluded,
             'is-invisible': !day.isVisible,
-            'is-active': day.isActive || (fromToDate.from === day.date || fromToDate.to === day.date)
-          }" (click)="selectDay(i, 'primary')">
+            'is-active': day.isActive || fromToDate.from === day.date || fromToDate.to === day.date
+          }"
+          (click)="selectDay(i, 'primary')"
+        >
           {{ day.day }}
         </span>
       </div>
@@ -36,15 +40,20 @@
         <span *ngFor="let name of calendarNext.dayNames" class="day">{{ name }}</span>
       </div>
       <div class="calendar-days">
-        <span *ngFor="let day of calendarNext.days; let i = index" class="day" [ngClass]="{
-          'is-disabled': !day.isSelectable,
-          'is-prev-month': !day.isSameMonth,
-          'is-today': day.isToday,
-          'is-selected': day.isSelected,
-          'is-included': day.isIncluded,
-          'is-invisible': !day.isVisible,
-          'is-active': day.isActive || (fromToDate.from === day.date || fromToDate.to === day.date)
-        }" (click)="selectDay(i, 'secondary')">
+        <span
+          *ngFor="let day of calendarNext.days; let i = index"
+          class="day"
+          [ngClass]="{
+            'is-disabled': !day.isSelectable,
+            'is-prev-month': !day.isSameMonth,
+            'is-today': day.isToday,
+            'is-selected': day.isSelected,
+            'is-included': day.isIncluded,
+            'is-invisible': !day.isVisible,
+            'is-active': day.isActive || fromToDate.from === day.date || fromToDate.to === day.date
+          }"
+          (click)="selectDay(i, 'secondary')"
+        >
           {{ day.day }}
         </span>
       </div>
