@@ -200,7 +200,7 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
                 isToday: false,
                 isSelectable: false,
                 isSelected: false,
-                isVisible: !!this.options.showPreviousDays,
+                isVisible: true,
                 isIncluded:
                   isAfter(curr, this.fromToDate.from || new Date()) && isBefore(curr, this.fromToDate.to || new Date()),
                 isActive: false
@@ -223,7 +223,7 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
     return {
       month: getMonth(date),
       year: getYear(date),
-      title: format(date, this.options.formatTitle || 'MMMM uuuu'),
+      title: format(date, this.options.formatTitle || 'MMMM uuuu', { locale: this.options.locale }),
       days,
       dayNames
     };

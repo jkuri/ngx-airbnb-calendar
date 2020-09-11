@@ -28,13 +28,11 @@ export interface CalendarOptions {
   maxDate?: Date;
   minYear?: number;
   maxYear?: number;
-  placeholder?: string;
   format?: string;
   formatTitle?: string;
   formatDays?: string;
   firstCalendarDay?: number;
   locale?: Locale;
-  showPreviousDays?: boolean;
   closeOnSelected?: boolean;
 }
 
@@ -45,11 +43,10 @@ export function mergeCalendarOptions(opts?: CalendarOptions): CalendarOptions {
 const defaultOptions: CalendarOptions = {
   minYear: getYear(new Date()) - 30,
   maxYear: getYear(new Date()) + 30,
-  placeholder: '',
   format: 'yyyy/LL/dd',
+  formatTitle: 'MMMM uuuu',
   formatDays: 'eeeeee',
   firstCalendarDay: 0,
   locale: enUS,
-  showPreviousDays: false,
   closeOnSelected: false
 };
