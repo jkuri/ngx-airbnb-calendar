@@ -18,7 +18,10 @@
             'is-prev-month': !day.isSameMonth,
             'is-today': day.isToday,
             'is-selected': day.isSelected,
-            'is-disabled': !day.isSelectable,
+            'is-disabled':
+              !day.isSelectable ||
+              ({}.toString.call(this.options.maxDate) === '[object Date]' ? this.options.maxDate! < day.date : false) ||
+              ({}.toString.call(this.options.minDate) === '[object Date]' ? this.options.minDate! > day.date : false),
             'is-included': day.isIncluded,
             'is-invisible': !day.isVisible,
             'is-active': day.isActive || fromToDate.from === day.date || fromToDate.to === day.date
@@ -44,7 +47,10 @@
           *ngFor="let day of calendarNext.days; let i = index"
           class="day"
           [ngClass]="{
-            'is-disabled': !day.isSelectable,
+            'is-disabled':
+              !day.isSelectable ||
+              ({}.toString.call(this.options.maxDate) === '[object Date]' ? this.options.maxDate! < day.date : false) ||
+              ({}.toString.call(this.options.minDate) === '[object Date]' ? this.options.minDate! > day.date : false),
             'is-prev-month': !day.isSameMonth,
             'is-today': day.isToday,
             'is-selected': day.isSelected,
