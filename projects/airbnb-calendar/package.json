@@ -1,6 +1,23 @@
 {
   "name": "ngx-airbnb-calendar",
   "version": "0.4.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jkuri/ngx-airbnb-calendar"
+  },
+  "author": {
+    "name": "Jan Kuri",
+    "email": "jkuri88@gmail.com",
+    "url": "https://jankuri.com"
+  },
+  "license": "MIT",
+  "keywords": [
+    "Angular",
+    "Calendar",
+    "Date",
+    "Daterange",
+    "Picker"
+  ],
   "peerDependencies": {
     "@angular/common": "^10.0.14",
     "@angular/core": "^10.0.14"
