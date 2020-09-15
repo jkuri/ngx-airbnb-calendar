@@ -61,6 +61,15 @@ export class AirbnbCalendarComponent implements ControlValueAccessor, OnInit, On
     this.innerValue = val;
   }
 
+  get controlsStatus(): { from: boolean; to: boolean } {
+    return {
+      from: Boolean(this.options.minYear && this.options.minYear < this.calendar.year && this.calendar.month !== 0),
+      to: Boolean(
+        this.options.maxYear && this.options.maxYear > this.calendarNext.year && this.calendarNext.month !== 11
+      )
+    };
+  }
+
   writeValue(val: string | null): void {
     this.innerValue = val;
   }

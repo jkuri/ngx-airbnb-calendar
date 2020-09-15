@@ -2,7 +2,14 @@
   <div class="airbnb-calendar">
     <section class="calendar">
       <div class="controls">
-        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" class="chevron-left" (click)="prevMonth()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="8"
+          height="14"
+          class="chevron-left"
+          (click)="prevMonth()"
+          [class.is-disabled]="!controlsStatus.from"
+        >
           <path d="M2.414 7l5.293 5.293a1 1 0 01-1.414 1.414l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L2.414 7z" />
         </svg>
         <span class="month-name">{{ calendar.title }}</span>
@@ -35,7 +42,14 @@
     <section class="calendar">
       <div class="controls">
         <span class="month-name">{{ calendarNext.title }}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" class="chevron-right" (click)="nextMonth()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="8"
+          height="14"
+          class="chevron-right"
+          (click)="nextMonth()"
+          [class.is-disabled]="!controlsStatus.to"
+        >
           <path d="M5.586 7L.293 12.293a1 1 0 001.414 1.414l6-6a1 1 0 000-1.414l-6-6A1 1 0 00.293 1.707L5.586 7z" />
         </svg>
       </div>
